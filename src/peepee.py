@@ -1,5 +1,6 @@
 #peepee.py
 
+import functools
 import pychorus
 import librosa
 import librosa.display
@@ -9,11 +10,39 @@ import numpy as np
 import math
 from matplotlib import pyplot as plt
 
+BUGS = True
+
 music1="src/Money-Trees-bBNpSXAYteM.mp4"
 music2="src/aweEevee.wav"
 
-y, sr = librosa.load(music1)
-z, pr = librosa.load(music2)
+
+
+notes = {
+    11:'B',
+    10:'Bb',
+    9:'A',
+    8:'Aa',
+    7:'G',
+    6:'Gg',
+    5:'F',
+    4:'E',
+    3:"Ee",
+    2:"D",
+    1:"Dd",
+    0:"C"
+}
+
+
+
+def compareChorus():
+    y1, sr1 = librosa.load(music1)
+    y2, sr2 = librosa.load(music2)
+
+    a = getChorus(y1,sr1)
+    b = getChorus(y2,sr2)
+
+    print(lcs("".join(a),"".join(b)))
+
 
 
 def getChorus(y, sr):
@@ -24,8 +53,18 @@ def getChorus(y, sr):
     This contains both Vocal and Instruments
 
     """
+    
+    
+    duration = librosa.get_duration(y,sr)
+    
+    mono = librosa.to_mono(y)
 
-    S_full, phase = librosa.magphase(librosa.stft(y))
+    if(BUGS):
+        print(y)
+        print(duration)
+        print(mono)
+
+    S_full, phase = librosa.magphase(librosa.stft(mono))
 
     """ 
     Compare frames using cosine similarity and aggregate similar frames
@@ -40,8 +79,63 @@ def getChorus(y, sr):
                                     metric='cosine',
                                     width=int(librosa.time_to_frames(2, sr=sr)))
     S_filter = np.minimum(S_full, S_filter)
-
     
+
+
+    chroma = librosa.feature.chroma_cqt(mono, sr)
+    noteSheet = []
+    if(BUGS):
+        print(len(chroma[0]))
+        print(int(len(chroma[0])/duration))
+
+    for i in range(len(chroma[0])):
+        largestChar = ['a',0]
+        for j in range(len(chroma)):
+            if largestChar[1]<chroma[j][i]:
+                largestChar = [notes[j], chroma[j][i]]
+
+        if(len(noteSheet)==0):
+            noteSheet.append(largestChar[0])
+        elif(noteSheet[-1] != largestChar[0]):
+            noteSheet.append(largestChar[0])
+    if(BUGS):
+        print(noteSheet[:10])
+        print(len(noteSheet))
+
+    #I know runtime is bad, its n^2 ffs
+
+    longestCommonSubArray = []
+
+
+    for i in range(len(noteSheet)):
+        tempArray = []
+        sVal = 0
+        for j in range(i+1, len(noteSheet)):
+
+            if(noteSheet[j-sVal]==noteSheet[j] and sVal!=0):
+                tempArray.append(noteSheet[j])
+            elif(noteSheet[i] == noteSheet[j] and sVal==0):
+                sVal = j
+                tempArray.append(noteSheet[j])
+            else:
+                if len(longestCommonSubArray)<len(tempArray):
+                    longestCommonSubArray = tempArray
+                    tempArray.clear()
+                    sVal=0
+    if(BUGS):
+        print(longestCommonSubArray)
+        print(len(longestCommonSubArray))  
+
+    return(longestCommonSubArray)  
+
+    """ plt.figure(figsize=(18,5))
+    librosa.display.specshow(chroma, sr=sr, x_axis='time', y_axis='chroma', vmin=0, vmax=1)
+    plt.title('Chromagram')
+    plt.colorbar()
+    #librosa.display.specshow(chroma, sr=sr, x_axis='s', y_axis='chroma')
+
+    plt.show() """
+
              
 #harmonics
 
@@ -79,12 +173,12 @@ plt.show()
 ## Author of Pychorus
 
 
-def computetempo(y, sr):
+def computeTempo(y, sr):
     #Tempo
     return librosa.beat.tempo(y,sr)
     #librosa.beat.tempo(z,pr)
 
-def compareTemp(a,b):
+def compareTempo(a,b):
     accuracy = (1 - abs(a - b)/(a))*100
     print('Tempo Accuracy: ', accuracy)
 
@@ -99,3 +193,24 @@ def compute_similarity_matrix_slow(self, chroma):
                 np.linalg.norm(chroma[:, i] - chroma[:, j]) / math.sqrt(12))
 
     return time_time_similarity
+
+
+
+def lcs(X, Y):
+    m = len(X)
+    n = len(Y)
+
+    @functools.lru_cache(None)
+    def lcsHelper(X, Y, m, n): 
+        if m == 0 or n == 0:
+            return 0
+        elif X[m-1] == Y[n-1]:
+            return 1 + lcsHelper(X, Y, m-1, n-1)
+        else:
+            return max(lcsHelper(X, Y, m, n-1), lcsHelper(X, Y, m-1, n))
+    return(lcsHelper(X,Y,m,n))
+
+
+
+if __name__ == "__main__":
+    compareChorus()
