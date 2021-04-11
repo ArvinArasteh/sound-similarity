@@ -2,6 +2,7 @@ import librosa
 import scipy
 import numpy as np
 
+
 def getResults(file):
     y, sr = librosa.load(file)
     onset_env = librosa.onset.onset_strength(y, sr=sr)
@@ -26,6 +27,3 @@ def diff(music1, music2):
         sum2 += elem
 
     return sum2 - sum1
-
-res = diff("../music/America_A_Horse_With_No_Name.wav", "../music/Lift_Yourself_Kanye.wav")
-print(res)
