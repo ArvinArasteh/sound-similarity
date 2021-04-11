@@ -12,8 +12,8 @@ from matplotlib import pyplot as plt
 
 BUGS = False
 
-music1="src/Money-Trees-bBNpSXAYteM.mp4"
-music2="src/aweEevee.wav"
+music1="music/Darude_Sandstorm.wav"
+music2="music/Darude_Sandstorm.wav"
 
 
 
@@ -41,7 +41,11 @@ def compareChorus(m1, m2):
     a = getChorus(y1,sr1)
     b = getChorus(y2,sr2)
 
-    return (lcs("".join(a),"".join(b)))
+    bVal = lcs("".join(a),"".join(b))
+    accuracy = (1 - abs(len(a) - bVal)/(len(a)))*100
+
+    result = "The accuracy is " +  str(accuracy)+ "%"
+    return (result)
 
 
 
@@ -211,5 +215,4 @@ def lcs(X, Y):
 
 
 
-if __name__ == "__main__":
-    compareChorus()
+print(compareChorus(music1, music2))
