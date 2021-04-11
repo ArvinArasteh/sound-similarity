@@ -1,5 +1,3 @@
-#peepee.py
-
 import functools
 import pychorus
 import librosa
