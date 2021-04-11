@@ -12,7 +12,7 @@ song.
 
 print(loudness)'''
 
-y, sr = librosa.load("src/Money-Trees-bBNpSXAYteM.mp4")
+y, sr = librosa.load("src/Money-Trees-bBNpSXAYteM.mp3")
 onset_env = librosa.onset.onset_strength(y, sr=sr)
 prior_lognorm = scipy.stats.lognorm(loc=np.log(120), scale=120, s=1)
 
