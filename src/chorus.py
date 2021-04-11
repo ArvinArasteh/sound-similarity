@@ -10,7 +10,7 @@ import numpy as np
 import math
 from matplotlib import pyplot as plt
 
-BUGS = True
+BUGS = False
 
 music1="src/Money-Trees-bBNpSXAYteM.mp4"
 music2="src/aweEevee.wav"
@@ -41,7 +41,7 @@ def compareChorus(m1, m2):
     a = getChorus(y1,sr1)
     b = getChorus(y2,sr2)
 
-    print(lcs("".join(a),"".join(b)))
+    return (lcs("".join(a),"".join(b)))
 
 
 
