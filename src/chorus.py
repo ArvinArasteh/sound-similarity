@@ -1,3 +1,5 @@
+#peepee.py
+
 import functools
 import pychorus
 import librosa
@@ -8,7 +10,7 @@ import numpy as np
 import math
 from matplotlib import pyplot as plt
 
-BUGS = False
+BUGS = True
 
 music1="src/Money-Trees-bBNpSXAYteM.mp4"
 music2="src/aweEevee.wav"
@@ -32,9 +34,9 @@ notes = {
 
 
 
-def compareChorus():
-    y1, sr1 = librosa.load(music1)
-    y2, sr2 = librosa.load(music2)
+def compareChorus(m1, m2):
+    y1, sr1 = librosa.load(m1)
+    y2, sr2 = librosa.load(m2)
 
     a = getChorus(y1,sr1)
     b = getChorus(y2,sr2)
@@ -78,14 +80,18 @@ def getChorus(y, sr):
     
 
 
+    #Get Chroma values which results in the 12 note system
     chroma = librosa.feature.chroma_cqt(mono, sr)
     noteSheet = []
     if(BUGS):
         print(len(chroma[0]))
         print(int(len(chroma[0])/duration))
 
+    #Runs through the length of the song
     for i in range(len(chroma[0])):
         largestChar = ['a',0]
+        
+        #Runs through 12 notes
         for j in range(len(chroma)):
             if largestChar[1]<chroma[j][i]:
                 largestChar = [notes[j], chroma[j][i]]
@@ -99,10 +105,11 @@ def getChorus(y, sr):
         print(len(noteSheet))
 
     #I know runtime is bad, its n^2 ffs
-
+    
     longestCommonSubArray = []
 
 
+    #gets longest common subarray inside the array and determines it as the chorus
     for i in range(len(noteSheet)):
         tempArray = []
         sVal = 0
@@ -162,12 +169,13 @@ plt.show()
 ## Code used from https://gist.github.com/vivjay30/6ab1c1d1831d3c6b6ad4c8c28ba075be#file-time_time_similarity-py
 ## Author of Pychorus
 
-
+#Compute Tempo
 def computeTempo(y, sr):
     #Tempo
     return librosa.beat.tempo(y,sr)
     #librosa.beat.tempo(z,pr)
 
+#Returns the accuracy of the 2 tempos
 def compareTempo(a,b):
     accuracy = (1 - abs(a - b)/(a))*100
     print('Tempo Accuracy: ', accuracy)
@@ -186,6 +194,7 @@ def compute_similarity_matrix_slow(self, chroma):
 
 
 
+#Returns the Longest Common substring
 def lcs(X, Y):
     m = len(X)
     n = len(Y)
@@ -202,5 +211,5 @@ def lcs(X, Y):
 
 
 
-# if __name__ == "__main__":
-#     compareChorus()
+if __name__ == "__main__":
+    compareChorus()
