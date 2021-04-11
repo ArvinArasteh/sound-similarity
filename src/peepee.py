@@ -51,7 +51,6 @@ def getChorus(y, sr):
     stft -> Short-time Fourier transform (STFT). 
     stft: Used to determine the sin wave frequency and phase content of local sections of a signal as it changes over time.
     This contains both Vocal and Instruments
-
     """
     
     
@@ -71,7 +70,6 @@ def getChorus(y, sr):
             by taking their (per-frequency) median value.
     To avoid being biased by local continuity, constrain similar frames to be
             separated by at least 2 seconds.
-
     """
 
     S_filter = librosa.decompose.nn_filter(S_full,
@@ -82,14 +80,18 @@ def getChorus(y, sr):
     
 
 
+    #Get Chroma values which results in the 12 note system
     chroma = librosa.feature.chroma_cqt(mono, sr)
     noteSheet = []
     if(BUGS):
         print(len(chroma[0]))
         print(int(len(chroma[0])/duration))
 
+    #Runs through the length of the song
     for i in range(len(chroma[0])):
         largestChar = ['a',0]
+        
+        #Runs through 12 notes
         for j in range(len(chroma)):
             if largestChar[1]<chroma[j][i]:
                 largestChar = [notes[j], chroma[j][i]]
@@ -103,10 +105,11 @@ def getChorus(y, sr):
         print(len(noteSheet))
 
     #I know runtime is bad, its n^2 ffs
-
+    
     longestCommonSubArray = []
 
 
+    #gets longest common subarray inside the array and determines it as the chorus
     for i in range(len(noteSheet)):
         tempArray = []
         sVal = 0
@@ -133,7 +136,6 @@ def getChorus(y, sr):
     plt.title('Chromagram')
     plt.colorbar()
     #librosa.display.specshow(chroma, sr=sr, x_axis='s', y_axis='chroma')
-
     plt.show() """
 
              
@@ -147,13 +149,10 @@ def getChorus(y, sr):
 chroma2, _, _, _ = pychorus.create_chroma(music2)
 time_time_similarity = pychorus.TimeTimeSimilarityMatrix(chroma1, sr)
 time_lag_similarity = pychorus.TimeLagSimilarityMatrix(chroma1, sr)
-
 # Visualize the results
 time_time_similarity.display()
 time_lag_similarity.display() 
-
 print("\nTrying Harmonics \n")
-
 chroma = librosa.feature.chroma_cqt(y, sr)
 plt.figure(figsize=(18,5))
 librosa.display.specshow(chroma, sr=sr, x_axis='time', y_axis='chroma', vmin=0, vmax=1)
@@ -162,22 +161,21 @@ plt.colorbar()
 plt.figure(figsize=(20,8))
 plt.title('')
 librosa.display.specshow(chroma, sr=sr, x_axis='s', y_axis='chroma')
-
 plt.show()
 #print()
-
 """
 
 
 ## Code used from https://gist.github.com/vivjay30/6ab1c1d1831d3c6b6ad4c8c28ba075be#file-time_time_similarity-py
 ## Author of Pychorus
 
-
+#Compute Tempo
 def computeTempo(y, sr):
     #Tempo
     return librosa.beat.tempo(y,sr)
     #librosa.beat.tempo(z,pr)
 
+#Returns the accuracy of the 2 tempos
 def compareTempo(a,b):
     accuracy = (1 - abs(a - b)/(a))*100
     print('Tempo Accuracy: ', accuracy)
@@ -196,6 +194,7 @@ def compute_similarity_matrix_slow(self, chroma):
 
 
 
+#Returns the Longest Common substring
 def lcs(X, Y):
     m = len(X)
     n = len(Y)
