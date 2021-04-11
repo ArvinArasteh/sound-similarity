@@ -7,8 +7,8 @@ from scipy.spatial import distance
 import librosa.display
 
 
-def main():
-    def soundWaves(file):
+# def main():
+def soundWaves(file):
 
         """ 
 
@@ -80,7 +80,7 @@ def main():
 
         return avgVocalRes
 
-    def vocalDistanceBetweenTwoMusic(music1, music2):
+def vocalDistanceBetweenTwoMusic(music1, music2):
 
         """ 
 
@@ -98,5 +98,5 @@ def main():
     # print(vocalDistanceBetweenTwoMusic('aweEevee.wav','aweEevee.wav'))
 
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
