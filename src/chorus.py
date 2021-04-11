@@ -43,7 +43,7 @@ def compareChorus(m1, m2):
 
     lenA = len("".join(a))
     lenLCS = lcs("".join(a),"".join(b))
-    accuracy = (lenLCS/lenA)*100
+    accuracy = (1-(lenLCS/lenA))*100
 
     #result = "The accuracy is " +  str(accuracy)+ "%"
     return (accuracy)
