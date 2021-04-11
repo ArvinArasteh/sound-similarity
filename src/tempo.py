@@ -2,18 +2,30 @@ import librosa
 import scipy
 import numpy as np
 
-y, sr = librosa.load("Money-Trees-bBNpSXAYteM.mp4")
-onset_env = librosa.onset.onset_strength(y, sr=sr)
-prior_lognorm = scipy.stats.lognorm(loc=np.log(120), scale=120, s=1)
+def getResults(file):
+    y, sr = librosa.load(file)
+    onset_env = librosa.onset.onset_strength(y, sr=sr)
+    prior_lognorm = scipy.stats.lognorm(loc=np.log(120), scale=120, s=1)
 
-dtempo_lognorm = librosa.beat.tempo(onset_envelope=onset_env, sr=sr,aggregate=None,prior=prior_lognorm)
-tempo = librosa.beat.tempo(onset_envelope=onset_env, sr=sr,aggregate=None)
-res = dict()
-for elem in dtempo_lognorm:
-    if elem not in res:
-        res[elem] = 1
-    else:
-        res[elem] = res[elem] + 1
+    dtempo_lognorm = librosa.beat.tempo(onset_envelope=onset_env, sr=sr,aggregate=None,prior=prior_lognorm)
+    tempo = librosa.beat.tempo(onset_envelope=onset_env, sr=sr,aggregate=None)
+    
+    return dtempo_lognorm
 
-for elem in res:
-    print(elem, res[elem])
+def diff(music1, music2):
+    res1 = getResults(music1)
+    res2 = getResults(music2)
+
+    sum1 = 0
+    sum2 = 0
+
+    for elem in res1:
+        sum1 += elem
+
+    for elem in res2:
+        sum2 += elem
+
+    return sum2 - sum1
+
+res = diff("../music/America_A_Horse_With_No_Name.wav", "../music/Lift_Yourself_Kanye.wav")
+print(res)
