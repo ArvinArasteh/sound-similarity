@@ -1,5 +1,3 @@
-#peepee.py
-
 import functools
 import pychorus
 import librosa
@@ -10,7 +8,7 @@ import numpy as np
 import math
 from matplotlib import pyplot as plt
 
-BUGS = True
+BUGS = False
 
 music1="src/Money-Trees-bBNpSXAYteM.mp4"
 music2="src/aweEevee.wav"
@@ -204,5 +202,5 @@ def lcs(X, Y):
 
 
 
-if __name__ == "__main__":
-    compareChorus()
+# if __name__ == "__main__":
+#     compareChorus()
