@@ -95,7 +95,7 @@ def main():
         return dst
 
     # Test
-    print(vocalDistanceBetweenTwoMusic('aweEevee.wav','aweEevee.wav'))
+    # print(vocalDistanceBetweenTwoMusic('aweEevee.wav','aweEevee.wav'))
 
 
 if __name__ == "__main__":
