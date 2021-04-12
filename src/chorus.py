@@ -1,5 +1,3 @@
-#peepee.py
-
 import functools
 import pychorus
 import librosa
@@ -13,7 +11,7 @@ from matplotlib import pyplot as plt
 BUGS = False
 
 music1="music/Darude_Sandstorm.wav"
-music2="music/Darude_Sandstorm.wav"
+music2="music/America_A_Horse_With_No_Name.wav"
 
 
 
@@ -201,19 +199,18 @@ def compute_similarity_matrix_slow(self, chroma):
 
 #Returns the Longest Common substring
 def lcs(X, Y):
-    m = len(X)
-    n = len(Y)
-
-    @functools.lru_cache(None)
-    def lcsHelper(X, Y, m, n): 
-        if m == 0 or n == 0:
-            return 0
-        elif X[m-1] == Y[n-1]:
-            return 1 + lcsHelper(X, Y, m-1, n-1)
-        else:
-            return max(lcsHelper(X, Y, m, n-1), lcsHelper(X, Y, m-1, n))
-    return(lcsHelper(X,Y,m,n))
-
+    m = len(Y)
+    n = len(X)
+    dp=[[0]*(m+1) for _ in range(n+1)]
+    for i in range(n):
+        for j in range(m):
+            if X[i]==Y[j]:
+                dp[i+1][j+1]=dp[i][j]+1
+            else:
+                dp[i+1][j+1]=max(dp[i][j+1],dp[i+1][j])
+    return dp[-1][-1]
+    
 
 
-#print(compareChorus(music1, music2))
+
+print(compareChorus(music1, music2))
