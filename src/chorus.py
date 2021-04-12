@@ -213,8 +213,3 @@ def lcs(X, Y):
 
 
 
-<<<<<<< HEAD
-print(compareChorus(music1, music2))
-=======
-#print(compareChorus(music1, music2))
->>>>>>> 9b276d65d2f0072f42930b97a1a5942a125d1976
