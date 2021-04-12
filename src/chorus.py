@@ -30,6 +30,20 @@ notes = {
     0:"C"
 }
 
+def getMultipleChorus(x):
+    res = []
+    for i in x:
+        y, sr = librosa.load(i)
+        res.append(getChorus(y,sr))
+        print(len(res))
+
+    for i in range(len(res)):
+        for j in range(i, len(res)):
+            lenA = (len("".join(res[i]))+len("".join(res[j])))/2
+            lenLCS = lcs("".join(res[i]),"".join(res[j]))
+
+            accuracy = (1-(lenLCS/lenA))*100
+            print(x[i], " with ", x[j], " gets a score of ", accuracy, "%")
 
 
 def compareChorus(m1, m2):
@@ -39,7 +53,7 @@ def compareChorus(m1, m2):
     a = getChorus(y1,sr1)
     b = getChorus(y2,sr2)
 
-    lenA = len("".join(a))
+    lenA = (len("".join(a))+len("".join(b)))/2
     lenLCS = lcs("".join(a),"".join(b))
     accuracy = (1-(lenLCS/lenA))*100
 
