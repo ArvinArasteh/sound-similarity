@@ -19,11 +19,15 @@ def diff(music1, music2):
 
     sum1 = 0
     sum2 = 0
+    count1 = 0
+    count2 = 0
 
     for elem in res1:
         sum1 += elem
+        count1 += 1
 
     for elem in res2:
         sum2 += elem
+        count2 += 1
 
-    return sum2 - sum1
+    return (sum2 / count2) - (sum1 / count1)
